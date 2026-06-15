@@ -6,20 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
-{
-    Schema::table('bookings', function (Blueprint $table) {
-        $table->integer('queue_number')->nullable()->after('id');
-    });
-}
+    {
+        if (!Schema::hasColumn('bookings', 'queue_number')) {
+            Schema::table('bookings', function (Blueprint $table) {
+                $table->integer('queue_number')->nullable();
+            });
+        }
+    }
 
-public function down(): void
-{
-    Schema::table('bookings', function (Blueprint $table) {
-        $table->dropColumn('queue_number');
-    });
-}
+    public function down(): void
+    {
+        if (Schema::hasColumn('bookings', 'queue_number')) {
+            Schema::table('bookings', function (Blueprint $table) {
+                $table->dropColumn('queue_number');
+            });
+        }
+    }
 };
